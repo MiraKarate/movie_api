@@ -31,7 +31,8 @@ To use the API:
 2. Start the server using npm start.
 3. Access the API endpoints using a REST client or a web browser.
    
-## Technologies Used  
-+ Node.js
-+ Express.js
-+ MongoDB
+## Technologies Used
+
+- **Node.js**: A JavaScript runtime used for building the server.
+- **Express.js**: A web application framework for building RESTful APIs.
+- **MongoDB**: A NoSQL database used for data storage.
