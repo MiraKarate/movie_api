@@ -32,6 +32,6 @@ To use the API:
 3. Access the API endpoints using a REST client or a web browser.
    
 ## Technologies Used  
-++ Node.js
-++ Express.js
-++ MongoDB
++ Node.js
++ Express.js
++ MongoDB
