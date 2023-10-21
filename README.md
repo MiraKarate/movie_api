@@ -2,7 +2,8 @@
 
 ## Description 
 
-The server-side component of a “movies” web application is beeing built. The web application provides users with access to information about different movies, directors, and genres. Users are able to sign up, update their personal information, and create a list of their favorite movies. 
+The Movie API is a Node.js and Express.js backend server application that provides a RESTful API for accessing movie data and managing user accounts.  
+The web application provides users with access to information about different movies, directors, and genres. Users are able to sign up, update their personal information, and create a list of their favorite movies. 
 
 ## Key Features
 
@@ -15,3 +16,23 @@ The server-side component of a “movies” web application is beeing built. The
 + Allow users to add a movie to their list of favorites 
 + Allow existing users to deregister
 + Allow users to remove a movie from their list of favorites
+
+## Installation
+To get started, follow these steps:
+
+1. Clone the repository.
+2. Navigate to the project directory.
+3. Install the dependencies using **npm install**.
+   
+## Usage
+To use the API:
+
+1. Set up a MongoDB database and configure the connection string in config.js.
+2. Start the server using npm start.
+3. Access the API endpoints using a REST client or a web browser.
+   
+## Technologies Used
+
+- **Node.js**: A JavaScript runtime used for building the server.
+- **Express.js**: A web application framework for building RESTful APIs.
+- **MongoDB**: A NoSQL database used for data storage.
