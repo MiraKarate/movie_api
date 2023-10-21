@@ -1,26 +1,21 @@
-/** 
- * Movie API Documentation 
- * The API URL is: 
-*/
+/**
+ * Movie API Documentation
+ * The API URL is:
+ */
 
 /**
- * root file of the myFlix back end application
- * importing packages required for the project
+ * Root file of the myFlix back end application.
+ * Importing packages required for the project.
+ *
  * @requires express
  * @requires bodyParser
- * @requires fs
- * @requires path
- * @requires uuid
  * @requires morgan
- * @requires CORS
- * @requires ./auth
- * @requires ./passport
+ * @requires uuid
  * @requires mongoose
- * @requires ./models.js
+ * @requires Models
  * @requires express-validator
  */
 
-// required frameworks, packages
 const bodyParser = require('body-parser'),// require bodyparser
   express = require('express'), // require express
   morgan = require('morgan'), // require morgan
@@ -34,10 +29,11 @@ const Users = Models.User;
 
 const app = express();
 
-// CORS middleware
 /**
+ * CORS middleware
+ *
  * CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
- * https://www.npmjs.com/package/cors
+ * @see https://www.npmjs.com/package/cors
  */
 const cors = require('cors');
 //app.use(cors({ origin: '*' }))
@@ -58,7 +54,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static("public")); // express.static to serve “documentation.html” file from public folder 
+app.use(express.static("public")); // Serve "documentation.html" from the public folder 
 app.use(morgan("common"));
 
 
@@ -72,40 +68,39 @@ const passport = require('passport');
 require('./passport');
 
 
-/** 
- * API Endpoints 
- * */
+/**
+ * API Endpoints
+ */
 
 /**
- * Welcome page text response
  * @function
+ * @description Welcome page text response
  * @method GET - endpoint '/'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
- * @returns {object} - HTTP response object with the welcome message
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
+ * @returns {object} HTTP response object with the welcome message
  */
-// READ 
 app.get('/', (req, res) => {
   res.send("Welcome to myFlix!");
 });
 
 /**
- * Allows a user to view the documentation page. 
+ * @description Allows a user to view the documentation page.
+ * @method GET
  */
-
 app.get('/documentation', (req, res) => { //READ
   res.sendFile('public/documentation.html', { root: __dirname });
 });
 
 
 /**
- * Returns a list of all movies
- * @method GET
- * @param {string} endpoint - /movies
- * @param {function} callback - function(req, res)
+ * Returns a list of all movies.
+ *
+ * @method GET - endpoint '/movies'
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
  * @returns {object} - JSON object containing all movies
  */
-
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -119,12 +114,12 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 
 
 /**
- * Retrieves a specific movie by its' title
- * @function
+ * Retrieves a specific movie by its title.
+ *
  * @method GET - endpoint '/movies/:Title'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
- * @returns {object} - HTTP response object with the info of one movie
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
+ * @returns {object} - JSON object holding data of the movie
  */
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ Title: req.params.Title })
@@ -138,7 +133,15 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 });
 
 
-// Get genres 
+// Get genres
+/**
+ * Return a list of all movie genres
+ * @method GET - endpoint '/movies/genre'
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
+ * @returns {object} - JSON object containing all movie genres
+ */
+
 app.get('/movies/genre', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find({ 'Genre': req.params.genre })
     .then((movies) => {
@@ -152,12 +155,13 @@ app.get('/movies/genre', passport.authenticate('jwt', { session: false }), (req,
 
 
 /**
- *  Return data about a genre (description) by name/title
+ * Return data about a genre (description) by name/title
  * @function
  * @method GET - endpoint '/movies/genre/:genreName'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
- * @returns {object} - HTTP response object with info of one genre
+ * @param {string} genreName
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
+ * @returns {object} - JSON object with info of one genre
  */
 app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Genre.Name': req.params.genreName })
@@ -175,9 +179,10 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: fals
  * Return data about a director (bio, birth year, death year) by name
  * @function
  * @method GET - endpoint '/movies/directors/:directorName'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
- * @returns {object} - HTTP response object with info of one director
+ * @param {string} directorName
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
+ * @returns {object} - JSON object with info of one director
  */
 app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.findOne({ 'Director.Name': req.params.directorName })
@@ -193,14 +198,13 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
 
 // USERS //
 
-
 /**
  * Returns all registered users
  * @function
  * @method GET - endpoint '/users'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
- * @returns {object} - HTTP response object with a list of users 
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
+ * @returns {object} - JSON object with a list of users
  */
 app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
@@ -240,8 +244,8 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
  * Allows users to register by filling out required information
  * @function
  * @method POST - endpoint '/users'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
  * @returns {object} - JSON object holding data of the new user
  * @param {string} Username
  * @param {string} Password
@@ -291,8 +295,8 @@ check('Email', 'Email does not appear to be valid').isEmail()
  * Allows existing user to update their information
  * @function
  * @method PATCH - endpoint '/users/:Username'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
  * @returns {object} - JSON object holding updated data of the user
  * @param {string} Username
  * @param {string} Password
@@ -338,8 +342,8 @@ check('Email', 'Email does not appear to be valid').isEmail()
   * Allows registered users to add a movie to their favorites
   * @function
   * @method POST - endpoint '/users/:Username/movies/:MovieID'
-  * @param {object} - HTTP request object
-  * @param {object} - HTTP response object
+  * @param {object} req - HTTP request object
+  * @param {object} res - HTTP response object
   * @returns {object} - JSON object holding updated data of the user
   */
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -364,8 +368,8 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
  * Allows registered users to remove a movie from their favorites
  * @function
  * @method DELETE - endpoint '/users/:Username/movies/:MovieID'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
  * @returns {object} - JSON object holding updated data of the user
  */
 app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -390,8 +394,8 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
  * Allows a registered user to delete their account
  * @function
  * @method DELETE - endpoint '/users/:Username'
- * @param {object} - HTTP request object
- * @param {object} - HTTP response object
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
  * @returns {string} - message confirming account deletion
  */
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -409,13 +413,21 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
     });
 });
 
-// error-handling middleware function that logs all application-level errors to the terminal
+/**
+ * @description Error-handling middleware function that logs all application-level errors to the terminal.
+ * @param {object} err - Error object
+ * @param {object} req - HTTP request object
+ * @param {object} res - HTTP response object
+ * @param {function} next - Next middleware function
+ */
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something went wrong!");
 });
 
-// listen for requests
+/**
+ * @description Listen for requests on the specified port and host.
+ */
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
   console.log('Listening on Port ' + port);
